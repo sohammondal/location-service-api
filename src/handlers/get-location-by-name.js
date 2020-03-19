@@ -7,7 +7,7 @@ exports.getLocationByName = async (event) => {
     const s3 = new AWS.S3();
     const Bucket = 'location-data-test';
     const params = event.pathParameters;
-    console.log(params);
+    
     if (params && params.name) {
 
         const locationName = params.name.toLowerCase();
