@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  location-service-api
+
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+    Auth:
+      ApiKeyRequired: false
+    Cors:
+      AllowOrigin: "'*'"
+
+Parameters:
+  AppBucketName:
+    Type: String
+    Description: "REQUIRED: Unique S3 bucket name to use for the app."
+
+Resources:
+  UploadLocationFileFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: UploadFile
+      Description: Function for uploading JSON File(s) containing Location Name, Lat, Long and Additional Details.
+      Handler: src/handlers/upload-file.uploadFile
+      Runtime: nodejs10.x
+      MemorySize: 128
+      Timeout: 500
+      Role: arn:aws:iam::712571688932:role/S3ReadWriteRoleForLambda
+      Events:
+        LocationServiceApi:
+          Type: Api
+          Properties:
+            Path: /locations
+            Method: POST
+
+  GetLocationsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GetLocations
+      Description: Function for getting locations details.
+      Handler: src/handlers/get-all-locations.getAllLocations
+      Runtime: nodejs10.x
+      MemorySize: 128
+      Timeout: 500
+      Role: arn:aws:iam::712571688932:role/S3ReadWriteRoleForLambda
+      Events:
+        LocationServiceApi:
+          Type: Api
+          Properties:
+            Path: /locations
+            Method: GET
+  
+  GetLocationsByNameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GetLocationsByName
+      Description: Function for getting locations details by Name.
+      Handler: src/handlers/get-location-by-name.getLocationByName
+      Runtime: nodejs10.x
+      MemorySize: 128
+      Timeout: 500
+      Role: arn:aws:iam::712571688932:role/S3ReadWriteRoleForLambda
+      Events:
+        LocationServiceApi:
+          Type: Api
+          Properties:
+            Path: /locations/{name}
+            Method: GET
+  
+Outputs:
+  LocationServiceApi:
+    Description: "API Gateway endpoint URL for  Location Service API"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  
+  uploadFileFunction:
+    Value: !GetAtt UploadFileFunction.Arn
