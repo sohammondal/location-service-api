@@ -8,8 +8,8 @@ describe('Test getLocationByName', function () {
     it('should return a location object', async () => {
 
         const mockLocationData = {
-            lat: 10,
-            lng: 11
+            lat: 22.5726,
+            lng: 88.3639,
         }
 
         const mockResponseBody = Buffer.from(JSON.stringify(mockLocationData))
@@ -33,7 +33,15 @@ describe('Test getLocationByName', function () {
         }
 
         const resp = await lambda.getLocationByName(event);
-        expect(resp.body).toBe(JSON.stringify(mockLocationData));
+        const expectedResp = {
+            ...mockLocationData,
+            distance: {
+                value: 7030.28086939495,
+                unit: "KM",
+                description: "Bee line distance to Klima.Metrix office from the requested location (in KMs)"
+            }
+        }
+        expect(resp.body).toBe(JSON.stringify(expectedResp));
 
 
     })
