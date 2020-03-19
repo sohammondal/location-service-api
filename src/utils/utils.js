@@ -1,5 +1,10 @@
+/**
+* This function mocks the multipart request builder
+*  It takes an array of File Objects { upfile:'',content:'' } as input
+*  Returns a multipart request object containing header and payload
+*/
 
-exports.multiPartFormDataBuiler = (files = []) => {
+exports.multiPartFormDataRequestBuilder = (files = []) => {
     let boundary = "xxxxxxxxxx";
     let data = "";
     data += "--" + boundary + "\r\n";
@@ -37,6 +42,12 @@ exports.multiPartFormDataBuiler = (files = []) => {
     }
 }
 
+
+/**
+ * This functions check if the input is a valid JSON or not
+ * Input: [String]
+ * Output: [Boolean]
+ */
 exports.isValidJSON = (inputStr) => {
     try {
         const json = JSON.parse(inputStr);
