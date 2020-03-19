@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "sam local start-api --profile default ---env-vars env.json",
+    "start": "sam local start-api --profile default",
     "build": "sam build",
     "deploy": "sam deploy --guided"
   }
