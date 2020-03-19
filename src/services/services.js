@@ -4,24 +4,22 @@
  * Output: Number
  */
 exports.beelineDistanceCalculatorService = (src,dest) =>{
-    
-    const toRadian = (n) => n* Math.PI / 100
-    const earthRadius = 6371; // km
-    lat1 = parseFloat(src.lat);
-    lat2 = parseFloat(dest.lat);
-    lon1 = parseFloat(dest.lng);
-    lon2 = parseFloat(dest.lng);
 
-    let dLat = toRadian(lat2 - lat1);
-    let dLon = toRadian(lon2 - lon1);
-    lat1 = toRadian(lat1);
-    lat2 = toRadian(lat2);
+    if ((src.lat == dest.lat) && (src.lon == dest.lon)) {
+		return 0;
+	}
 
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const d = earthRadius * c;
-
-    return Math.round(d * Math.pow(10, 4)) / Math.pow(10, 4);
+    const radlat1 = Math.PI * src.lat/180;
+    const radlat2 = Math.PI * dest.lat/180;
+    const theta = src.lon-dest.lon;
+    const radtheta = Math.PI * theta/180;
+    const dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) {
+        dist = 1;
+    }
+    dist = Math.acos(dist);
+    dist = dist * 180/Math.PI;
+    dist = dist * 60 * 1.1515;
+    return dist * 1.609344; 
     
 }
