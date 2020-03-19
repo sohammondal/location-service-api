@@ -73,5 +73,11 @@ Outputs:
     Description: "API Gateway endpoint URL for  Location Service API"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
   
-  uploadFileFunction:
+  uploadLocationFileFunction:
     Value: !GetAtt UploadFileFunction.Arn
+  
+  getLocationsFunction:
+    Value: !GetAtt GetLocationsFunction.Arn
+  
+  getLocationsByNameFunction:
+    Value: !GetAtt GetLocationsByNameFunction.Arn
