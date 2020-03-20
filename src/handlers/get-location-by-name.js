@@ -5,7 +5,7 @@ AWS.config.update({
 
 exports.getLocationByName = async (event) => {
     const s3 = new AWS.S3();
-    const Bucket = 'location-data-test';
+    const Bucket = process.env.BUCKET_NAME;
     const KlimaMetrixOfficeCoords = {
         lat: 52.502931,
         lng: 13.408249

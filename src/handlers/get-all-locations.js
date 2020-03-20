@@ -5,7 +5,7 @@ AWS.config.update({
 exports.getAllLocations = async (event) => {
     
     const s3 = new AWS.S3();
-    const Bucket = 'location-data-test';
+    const Bucket = process.env.BUCKET_NAME;
 
     try {
         const resp = await s3.listObjectsV2({Bucket}).promise();

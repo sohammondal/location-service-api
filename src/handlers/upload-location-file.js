@@ -125,7 +125,7 @@ exports.uploadLocationFile = async (event) => {
                
                 s3.upload({
                     Body: file.content,
-                    Bucket: "location-data-test", 
+                    Bucket: process.env.BUCKET_NAME, 
                     Key: sanitizeFileName(file.filename)
                 }).promise()
             )
