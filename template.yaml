@@ -3,7 +3,19 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   location-service-api
 
+Parameters:
+  AppBucketName:
+    Type: String
+    Description: "REQUIRED: Unique S3 bucket name to use for the app."
+
 Globals:
+  Function:
+    Runtime: nodejs10.x
+    MemorySize: 128
+    Timeout: 500
+    Environment:
+      Variables:
+        BUCKET_NAME: !Ref AppBucketName
   Api:
     EndpointConfiguration: REGIONAL
     Auth:
@@ -11,21 +23,13 @@ Globals:
     Cors:
       AllowOrigin: "'*'"
 
-Parameters:
-  AppBucketName:
-    Type: String
-    Description: "REQUIRED: Unique S3 bucket name to use for the app."
-
 Resources:
   UploadLocationFileFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: UploadFile
       Description: Function for uploading JSON File(s) containing Location Name, Lat, Long and Additional Details.
-      Handler: src/handlers/upload-file.uploadFile
-      Runtime: nodejs10.x
-      MemorySize: 128
-      Timeout: 500
+      Handler: src/handlers/upload-location-file.uploadLocationFile
       Role: arn:aws:iam::712571688932:role/S3ReadWriteRoleForLambda
       Events:
         LocationServiceApi:
@@ -40,9 +44,6 @@ Resources:
       FunctionName: GetLocations
       Description: Function for getting locations details.
       Handler: src/handlers/get-all-locations.getAllLocations
-      Runtime: nodejs10.x
-      MemorySize: 128
-      Timeout: 500
       Role: arn:aws:iam::712571688932:role/S3ReadWriteRoleForLambda
       Events:
         LocationServiceApi:
@@ -57,9 +58,6 @@ Resources:
       FunctionName: GetLocationsByName
       Description: Function for getting locations details by Name.
       Handler: src/handlers/get-location-by-name.getLocationByName
-      Runtime: nodejs10.x
-      MemorySize: 128
-      Timeout: 500
       Role: arn:aws:iam::712571688932:role/S3ReadWriteRoleForLambda
       Events:
         LocationServiceApi:
@@ -74,7 +72,7 @@ Outputs:
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
   
   uploadLocationFileFunction:
-    Value: !GetAtt UploadFileFunction.Arn
+    Value: !GetAtt UploadLocationFileFunction.Arn
   
   getLocationsFunction:
     Value: !GetAtt GetLocationsFunction.Arn
