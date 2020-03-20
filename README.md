@@ -19,6 +19,67 @@ To get started, see the following:
 * [VS Code](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/welcome.html)
 * [Visual Studio](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html)
 
+## APIs and Endpoints
+
+- [POST] `/locations` Upload a JSON file containing location data.
+    - The filename should be your location name. For eg. `Berlin.json`
+    - Content of the file should be in the following format -
+      ```json
+          {
+              "lat": 52.5167,
+              "lng": 13.4,
+              "country":"Germany",
+              "code":"DE",
+              "currency":"EUR"
+
+          }
+      ```
+      `lat` & `lng` are required.
+    - sample response to uploading 3 files (2 valid, 1 invalid):
+    ```json
+     {
+          "totalCount": 3,
+          "successCount": 2,
+          "failureCount": 1,
+          "errors": [
+              {
+                  "filename": "invalid-location-data.json",
+                  "message": "requires property \"lng\""
+              }
+          ]
+      }
+    ```
+- [GET] `/locations` Returns a list of locations.
+  - sample reposnse:
+   ```json
+      {
+        "locations": [
+            "berlin",
+            "kolkata"
+        ]
+      }
+    ```
+- [GET] `/locations/{name}` where `name` is the location name. For eg. Berlin. This end point returns location information of Berlin along with the beeline distance (in Kms) to Klima.Metrix office from Berlin.
+  - sample response for `/locations/berlin` :
+    ```json
+      {
+          "lat": 52.5167,
+          "lng": 13.4,
+          "country": "Germany",
+          "code": "DE",
+          "currency": "EUR",
+          "distance": {
+              "value": 1.6295677521056193,
+              "unit": "KM",
+              "description": "Bee line distance to Klima.Metrix office from the requested location (in KMs)"
+          }
+      }
+    ```
+
+## Demo
+
+You can explore this service from this endpoint - [https://au0uy76b0a.execute-api.us-east-1.amazonaws.com/Prod/locations](https://au0uy76b0a.execute-api.us-east-1.amazonaws.com/Prod/locations). It is hosted on AWS Lambda and exposed using API Gateway.
+
 ## Pre-requisite
 
 The following configuration needs to be done first:
